@@ -1,0 +1,1 @@
+import{_ as t}from"./NavBar.ae9d7568.js";import{N as r,c as a,f as c,X as n,o as s}from"./entry.8c71bdde.js";import"./useSupabaseClient.0f403400.js";const _={};function f(e,l){const o=t;return s(),a("div",null,[c(o),n(e.$slots,"default")])}const p=r(_,[["render",f]]);export{p as default};
