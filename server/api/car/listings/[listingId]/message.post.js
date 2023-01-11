@@ -1,0 +1,41 @@
+import Joi from "joi";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+const schema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().email({
+    minDomainSegments: 2,
+    tlds: { allow: ["com", "net"] },
+  }),
+  phone: Joi.string()
+    .length(10)
+    .pattern(/^[0-9]+$/)
+    .required(),
+  message: Joi.string().min(5).required(),
+});
+
+export default defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const { listingId } = event.context.params;
+
+  const { error } = await schema.validate(body);
+  if (error) {
+    throw createError({
+      statusCode: 412,
+      statusMessage: error.message,
+    });
+  }
+  const { message, email, name, phone } = body;
+
+  return prisma.message.create({
+    data: {
+      message,
+      email,
+      name,
+      phone,
+      listingId: parseInt(listingId),
+    },
+  });
+});
